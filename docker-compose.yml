@@ -1,0 +1,18 @@
+services:
+  portage:
+    image: gentoo/portage:latest
+
+  gentoo:
+    image: gentoo/stage3:latest
+    volumes_from:
+      - portage
+    volumes:
+      #- type: tmpfs
+      #  target: /var/tmp
+      #  tmpfs:
+      #    size: 12G
+      #    mode: 0777
+      - ./portage:/etc/portage:ro
+      - ./cache/distfiles:/var/cache/distfiles
+      - ./cache/binpks:/var/cache/binpkgs
+    entrypoint: emerge --ask --autounmask --autounmask-write=n --verbose --emptytree --update --newuse --deep --usepkg @system @world
